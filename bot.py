@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 # Dein Telegram-Bot-Token hier einfügen
 TOKEN = "8064368838:AAEA0H52fegUsWKOl3qayuMcmF_aXDzbZ5E"
 bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+dp = Dispatcher()
 
 # 📌 **Liste der Quellen für Wett-Tipps**
 QUELLEN = [

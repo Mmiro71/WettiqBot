@@ -5,7 +5,7 @@ from aiogram.types import Message
 from bs4 import BeautifulSoup
 
 # Dein Telegram-Bot-Token hier einfügen
-TOKEN = "DEIN_TELEGRAM_BOT_TOKEN"
+TOKEN = "8064368838:AAEA0H52fegUsWKOl3qayuMcmF_aXDzbZ5E"
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot)
 

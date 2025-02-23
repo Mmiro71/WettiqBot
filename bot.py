@@ -2,12 +2,15 @@ import asyncio
 import requests
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message
+from aiogram.filters import Command
+from aiogram.utils.markdown import hbold
+from aiogram.fsm.storage.memory import MemoryStorage
 from bs4 import BeautifulSoup
 
 # Dein Telegram-Bot-Token hier einfügen
 TOKEN = "8064368838:AAEA0H52fegUsWKOl3qayuMcmF_aXDzbZ5E"
 bot = Bot(token=TOKEN)
-dp = Dispatcher()
+dp = Dispatcher(storage=MemoryStorage())
 
 # 📌 **Liste der Quellen für Wett-Tipps**
 QUELLEN = [
@@ -60,26 +63,30 @@ def get_wett_tipp(spiel):
     return None  # Falls nichts gefunden wird
 
 # 📌 **Telegram-Handler für /start**
-@dp.message_handler(commands=["start"])
+@dp.message(Command("start"))
 async def send_welcome(message: Message):
-    await message.reply("👋 Willkommen! Gib ein Spiel ein, z. B.: Bayern - Dortmund")
+    await message.answer("👋 Willkommen! Gib ein Spiel ein, z. B.: Bayern - Dortmund")
 
 # 📌 **Telegram-Handler für Wett-Tipps**
-@dp.message_handler()
+@dp.message()
 async def send_tip(message: Message):
     spiel = message.text.strip()
     tipps = get_wett_tipp(spiel)
 
     if tipps:
-        antwort = f"📊 Wett-Tipps für **{spiel}**:\n\n"
+        antwort = f"📊 {hbold('Wett-Tipps für')} {spiel}:\n\n"
         for tipp in tipps:
             antwort += f"🔗 {tipp}\n"
     else:
         antwort = "❌ Keine Wett-Tipps gefunden."
 
-    await message.reply(antwort, parse_mode="Markdown")
+    await message.answer(antwort, parse_mode="HTML")
 
 # 📌 **Bot starten**
+async def main():
+    print("🤖 Bot wird gestartet...")
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
 if __name__ == "__main__":
-    from aiogram import executor
-    executor.start_polling(dp)
+    asyncio.run(main())
